@@ -5,9 +5,9 @@ It is a minimal unit testing framework for the C programming language.
 It has no dependencies and requires no installation or configuration.
 Only a header file and a test case is needed.
 
-	#include <cheat.h>
-
 ```c
+#include <cheat.h>
+
 CHEAT_TEST(mathematics_still_work,
 	cheat_assert(2 + 2 == 4);
 	cheat_assert_not(2 + 2 == 5);
