@@ -636,6 +636,11 @@ run in the default shell of FreeDOS.
 
 ### 7.3   Extension Header
 
+* `cheat_assert_bool(bool actual, bool expected)` checks a specialized success condition
+* `cheat_assert_not_bool(bool actual, bool expected)` checks the opposite of a specialized success condition
+
+ 
+
 * `cheat_assert_char(char actual, char expected)` checks a specialized success condition
 * `cheat_assert_not_char(char actual, char unexpected)` checks the opposite of a specialized success condition
 

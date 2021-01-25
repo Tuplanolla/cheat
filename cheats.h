@@ -1,6 +1,7 @@
 /*
 Copyright (c) 2012 Guillermo "Tordek" Freschi
 Copyright (c) 2013 Sampsa "Tuplanolla" Kiiskinen
+Copyright (c) 2021 Clement Foyer
 
 This is free software, and you are welcome to redistribute it
 under certain conditions; see the LICENSE file for details.
@@ -699,6 +700,46 @@ static void cheat_check_string(struct cheat_suite* const suite,
 
 #define cheat_assert_not_string(actual, expected) \
 	cheat_check_string(&cheat_suite, true, actual, expected, \
+		__FILE__, __LINE__)
+
+__attribute__ ((__io__, __nonnull__ (1, 5), __unused__))
+static void cheat_check_bool(struct cheat_suite* const suite,
+		bool const negate,
+		bool const actual,
+		bool const expected,
+		char const* const file,
+		size_t const line) {
+	if (cheat_further(suite->outcome) && (actual == expected) != !negate) {
+		char const* comparator;
+		char* expression;
+
+		suite->outcome = CHEAT_FAILED;
+
+		if (negate)
+			comparator = "!=";
+		else
+			comparator = "==";
+
+		expression = CHEAT_CAST(char*, cheat_allocate_total(4,
+					(size_t)5, strlen(comparator), (size_t)5, (size_t)3));
+		if (expression == NULL)
+			cheat_death("failed to allocate memory", errno);
+
+		if (cheat_print_string(expression,
+					"%s" " %s " "%s", 3, actual ? "true" : "false",
+					comparator, expected ? "true" : "false") < 0)
+			cheat_death("failed to build a string", errno);
+
+		cheat_print_failure(suite, expression, file, line);
+	}
+}
+
+#define cheat_assert_bool(actual, expected) \
+	cheat_check_bool(&cheat_suite, false, actual, expected, \
+		__FILE__, __LINE__)
+
+#define cheat_assert_not_bool(actual, expected) \
+	cheat_check_bool(&cheat_suite, true, actual, expected, \
 		__FILE__, __LINE__)
 
 #endif
